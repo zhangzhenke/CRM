@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -70,10 +71,27 @@ public class UserController {
 
                 //把user保存到session中
                 session.setAttribute(Constants.SESSION_USER,user);
+
+                //如果需要记住密码，则往外（浏览器）写cookie
+                if("true".equals(isRemPwd)){
+                    Cookie c1 = new Cookie("loginAct",user.getLoginAct());
+                    c1.setMaxAge(10*24*60*60);
+                    response.addCookie(c1);
+                    Cookie c2 = new Cookie("loginPwd",user.getLoginPwd());
+                    c2.setMaxAge(10*24*60*60);
+                    response.addCookie(c2);
+                }else{
+                    //把没有过期cookie删除
+                    Cookie c1 = new Cookie("loginAct","1");
+                    c1.setMaxAge(0);
+                    response.addCookie(c1);
+                    Cookie c2 = new Cookie("loginPwd","1");
+                    c2.setMaxAge(0);
+                    response.addCookie(c2);
+                }
             }
         }
 
         return returnObject;
-
     }
 }
