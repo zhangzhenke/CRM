@@ -94,4 +94,22 @@ public class UserController {
 
         return returnObject;
     }
+
+    /**
+     * 安全退出
+     */
+    @RequestMapping("/settings/qx/user/logout.do")
+    public String logout(HttpServletResponse response,HttpSession session){
+        //清空cookie
+        Cookie c1=new Cookie("loginAct","1");
+        c1.setMaxAge(0);
+        response.addCookie(c1);
+        Cookie c2=new Cookie("loginPwd","1");
+        c2.setMaxAge(0);
+        response.addCookie(c2);
+        //销毁session
+        session.invalidate();
+        //跳转到首页
+        return "redirect:/";//借助springmvc来重定向（两次请求，让地址栏也变化）,response.sendRedirect("/crm/");
+    }
 }
