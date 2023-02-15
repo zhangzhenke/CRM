@@ -36,7 +36,7 @@
 		});
 		
 		
-		window.open("main/index.html","workareaFrame");
+		window.open("workbench/main/index.do","workareaFrame");
 
 		//给“确定”按钮添加单击事件
 		$("#logoutBtn").click(function () {
@@ -51,7 +51,7 @@
 </head>
 <body>
 	
-	<!-- 我的资料 -->
+	<!-- 我的资料的模态窗口 -->
 	<div class="modal fade" id="myInformation" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 30%;">
 			<div class="modal-content">
@@ -168,7 +168,7 @@
 		<div id="navigation" style="left: 0px; width: 18%; position: relative; height: 100%; overflow:auto;">
 		
 			<ul id="no1" class="nav nav-pills nav-stacked">
-				<li class="liClass"><a href="main/index.html" target="workareaFrame"><span class="glyphicon glyphicon-home"></span> 工作台</a></li>
+				<li class="liClass"><a href="workbench/main/index.do" target="workareaFrame"><span class="glyphicon glyphicon-home"></span> 工作台</a></li>
 				<li class="liClass"><a href="javascript:void(0);" target="workareaFrame"><span class="glyphicon glyphicon-tag"></span> 动态</a></li>
 				<li class="liClass"><a href="javascript:void(0);" target="workareaFrame"><span class="glyphicon glyphicon-time"></span> 审批</a></li>
 				<li class="liClass"><a href="javascript:void(0);" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 客户公海</a></li>
