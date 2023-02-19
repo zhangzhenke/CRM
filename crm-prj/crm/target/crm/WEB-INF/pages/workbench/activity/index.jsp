@@ -7,23 +7,25 @@
 <head>
 	<base href="<%=basePath%>">
 <meta charset="UTF-8">
+	<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css">
+	<link rel="stylesheet" type="text/css" href="jquery/bs_pagination-master/css/jquery.bs_pagination.min.css">
 
-<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
-
-<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-
+	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="jquery/bs_pagination-master/js/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="jquery/bs_pagination-master/localization/en.js"></script>
 <script type="text/javascript">
 
+	//入口函数，最后执行
 	$(function(){
 		//给"创建"按钮添加单击事件，不用target属性实现，可以做一些初始化工作
 		$("#createActivityBtn").click(function () {
 			//初始化工作
 			//重置表单
-			//$("#createActivityForm").get(0).reset();
+			document.getElementById("#createActivityForm").reset();
 
 			//弹出创建市场活动的模态窗口
 			$("#createActivityModal").modal("show");
@@ -110,6 +112,18 @@
 				}
 			});
 		});
+
+		//当容器加载完成之后，对容器调用工具函数
+		//$("input[name='myDate']").datetimepicker({
+		$(".myDate").datetimepicker({
+			language:'zh-CN', //语言
+			format:'yyyy-mm-dd',//日期的格式
+			minView:'month', //可以选择的最小视图
+			initialDate:new Date(),//初始化显示的日期
+			autoclose:true,//设置选择完日期或者时间之后，日否自动关闭日历
+			todayBtn:true,//设置是否显示"今天"按钮,默认是false
+			clearBtn:true//设置是否显示"清空"按钮，默认是false
+		});
 		
 	});
 	
@@ -129,7 +143,7 @@
 				</div>
 				<div class="modal-body">
 				
-					<form class="form-horizontal" role="form">
+					<form id="#createActivityForm" class="form-horizontal" role="form">
 					
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
@@ -149,11 +163,11 @@
 						<div class="form-group">
 							<label for="create-startDate" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startDate">
+								<input type="text" class="form-control myDate" id="create-startDate" readonly>
 							</div>
 							<label for="create-endDate" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endDate">
+								<input type="text" class="form-control myDate" id="create-endDate" readonly>
 							</div>
 						</div>
                         <div class="form-group">
@@ -164,9 +178,9 @@
                             </div>
                         </div>
 						<div class="form-group">
-							<label for="create-describe" class="col-sm-2 control-label">描述</label>
+							<label for="create-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-description"></textarea>
 							</div>
 						</div>
 						
