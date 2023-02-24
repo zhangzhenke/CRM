@@ -6,6 +6,9 @@ import com.blink.crm.workbench.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Service("activityService")
 public class ActivityServiceImpl implements ActivityService {
 
@@ -17,4 +20,15 @@ public class ActivityServiceImpl implements ActivityService {
     public int saveCreateActivity(Activity activity) {
         return activityMapper.insertActivity(activity);
     }
+    //分页查询
+    @Override
+    public List<Activity> queryActivityByConditionForPage(Map<String, Object> map) {
+        return activityMapper.selectActivityByConditionForPage(map);
+    }
+    //根据条件查询市场活动的总条数
+    @Override
+    public int queryCountOfActivityByCondition(Map<String, Object> map) {
+        return activityMapper.selectCountOfActivityByCondition(map);
+    }
+
 }
