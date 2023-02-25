@@ -126,13 +126,26 @@
 		});
 
 		//当市场活动主页面加载完成，查询所有数据的第一页以及所有数据的总条数,默认每页显示10条
+		queryActivityByConditionForPage(1,10);
+
+		//给"查询"按钮添加单击事件
+		$("#queryActivityBtn").click(function () {
+			//查询所有符合条件数据的第一页以及所有符合条件数据的总条数;
+			queryActivityByConditionForPage(1,$("#demo_pag1").bs_pagination('getOption', 'rowsPerPage'));
+		});
+
+
+	});
+
+	//分页查询
+	function queryActivityByConditionForPage(pageNo,pageSize) {
 		//收集参数
 		var name=$("#query-name").val();
 		var owner=$("#query-owner").val();
 		var startDate=$("#query-startDate").val();
 		var endDate=$("#query-endDate").val();
-		var pageNo=1;
-		var pageSize=10;
+		//var pageNo=1;
+		//var pageSize=10;
 		//发送请求
 		$.ajax({
 			url:'workbench/activity/queryActivityByConditionForPage.do',
@@ -148,9 +161,9 @@
 			dataType:'json',
 			success:function (data) {
 				//显示总条数
-				$("#totalRowsB").text(data.totalRows);
+				//$("#totalRowsB").text(data.totalRows);
 				//显示市场活动的列表
-				//遍历activityList，拼接所有行数据,index下标，obj循环变量，js代码
+				//遍历activityList，拼接所有行数据
 				var htmlStr="";
 				$.each(data.activityList,function (index,obj) {
 					htmlStr+="<tr class=\"active\">";
@@ -163,10 +176,42 @@
 				});
 				$("#tBody").html(htmlStr);
 
+				//计算总页数
+				var totalPages = 1;
+				if(data.totalRows%pageSize==0){
+					totalPages=data.totalRows/pageSize;
+				}else{
+					//js系统函数，获取小数的整数
+					totalPages=parseInt(data.totalRows/pageSize)+1;
+				}
+
+				//对容器(必须加载完成)调用bs_pagination工具函数，显示翻页信息
+				$("#demo_pag1").bs_pagination({
+					currentPage:pageNo,//当前页号,相当于pageNo
+
+					rowsPerPage:pageSize,//每页显示条数,相当于pageSize
+					totalRows:data.totalRows,//总条数
+					totalPages: totalPages,  //总页数,必填参数.
+
+					visiblePageLinks:5,//最多可以显示的卡片数
+
+					showGoToPage:true,//是否显示"跳转到"部分,默认true--显示
+					showRowsPerPage:true,//是否显示"每页显示条数"部分。默认true--显示
+					showRowsInfo:true,//是否显示记录的信息，默认true--显示
+
+					//用户每次切换页号，都自动触发本函数;
+					//每次返回切换页号之后的pageNo和pageSize
+					onChangePage: function(event,pageObj) { // returns page_num and rows_per_page after a link has clicked
+						//js代码
+						//alert(pageObj.currentPage);
+						//alert(pageObj.rowsPerPage);
+						queryActivityByConditionForPage(pageObj.currentPage,pageObj.rowsPerPage);
+					}
+				});
+
 			}
 		});
-		
-	});
+	}
 	
 </script>
 </head>
@@ -381,7 +426,7 @@
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="queryActivityBtn">查询</button>
 				  
 				</form>
 			</div>
@@ -425,9 +470,9 @@
                         </tr>--%>
 					</tbody>
 				</table>
+				<div id="demo_pag1"></div>
 			</div>
-			
-			<div style="height: 50px; position: relative;top: 30px;">
+			<%--<div style="height: 50px; position: relative;top: 30px;">
 				<div>
 					<button type="button" class="btn btn-default" style="cursor: default;">共<b id="totalRowsB">50</b>条记录</button>
 				</div>
@@ -460,7 +505,7 @@
 						</ul>
 					</nav>
 				</div>
-			</div>
+			</div>--%>
 			
 		</div>
 		
