@@ -102,7 +102,7 @@
 						//关闭模态窗口，程序员专用
 						$("#createActivityModal").modal("hide");
 						//刷新市场活动列，显示第一页数据，保持每页显示条数不变
-						//queryActivityByConditionForPage(1,$("#demo_pag1").bs_pagination('getOption', 'rowsPerPage'));
+						queryActivityByConditionForPage(1,$("#demo_pag1").bs_pagination('getOption', 'rowsPerPage'));
 					}else{
 						//提示信息
 						alert(data.message);
@@ -134,6 +134,35 @@
 			queryActivityByConditionForPage(1,$("#demo_pag1").bs_pagination('getOption', 'rowsPerPage'));
 		});
 
+		//给"全选"按钮添加单击事件
+		$("#checkAll").click(function () {
+			//如果"全选"按钮是选中状态，则列表中所有checkbox都选中
+			/*if(this.checked==true){
+				$("#tBody input[type='checkbox']").prop("checked",true);
+			}else{
+				$("#tBody input[type='checkbox']").prop("checked",false);
+			}*/
+			//父标签下所有子标签
+			$("#tBody input[type='checkbox']").prop("checked",this.checked);
+		});
+
+		/*$("#tBody input[type='checkbox']").click(function () {
+                //如果列表中的所有checkbox都选中，则"全选"按钮也选中
+                if($("#tBody input[type='checkbox']").size()==$("#tBody input[type='checkbox']:checked").size()){
+                    $("#chckAll").prop("checked",true);
+                }else{//如果列表中的所有checkbox至少有一个没选中，则"全选"按钮也取消
+                    $("#chckAll").prop("checked",false);
+                }
+            });*/
+		//异步请求消息未归，没有办法给动态元素添加事件，需要换一种方法
+		$("#tBody").on("click","input[type='checkbox']",function () {
+			//如果列表中的所有checkbox都选中，则"全选"按钮也选中
+			if($("#tBody input[type='checkbox']").size()==$("#tBody input[type='checkbox']:checked").size()){
+				$("#checkAll").prop("checked",true);
+			}else{//如果列表中的所有checkbox至少有一个没选中，则"全选"按钮也取消
+				$("#checkAll").prop("checked",false);
+			}
+		});
 
 	});
 
@@ -175,6 +204,9 @@
 					htmlStr+="</tr>";
 				});
 				$("#tBody").html(htmlStr);
+
+				//取消"全选"按钮
+				$("#checkAll").prop("checked",false);
 
 				//计算总页数
 				var totalPages = 1;
@@ -446,7 +478,7 @@
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="checkAll"/></td>
 							<td>名称</td>
                             <td>所有者</td>
 							<td>开始日期</td>
