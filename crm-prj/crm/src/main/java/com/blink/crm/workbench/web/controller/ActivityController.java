@@ -97,4 +97,25 @@ public class ActivityController {
         return retMap;
     }
 
+    //根据ids批量删除市场活动
+    @RequestMapping("/workbench/activity/deleteActivityIds.do")
+    public @ResponseBody Object deleteActivityIds(String[] id){
+        ReturnObject returnObject = new ReturnObject();
+        try {
+            //调用service层方法，删除市场活动
+            int ret = activityService.deleteActivityByIds(id);
+            if(ret>0){
+                returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统忙，请稍后重试....");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统忙，请稍后重试....");
+        }
+        return returnObject;
+    }
+
 }

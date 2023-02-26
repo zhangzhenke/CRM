@@ -20,15 +20,23 @@ public class ActivityServiceImpl implements ActivityService {
     public int saveCreateActivity(Activity activity) {
         return activityMapper.insertActivity(activity);
     }
+
     //分页查询
     @Override
     public List<Activity> queryActivityByConditionForPage(Map<String, Object> map) {
         return activityMapper.selectActivityByConditionForPage(map);
     }
+
     //根据条件查询市场活动的总条数
     @Override
     public int queryCountOfActivityByCondition(Map<String, Object> map) {
         return activityMapper.selectCountOfActivityByCondition(map);
+    }
+
+    //根据ids批量删除市场活动
+    @Override
+    public int deleteActivityByIds(String[] ids) {
+        return activityMapper.deleteActivityByIds(ids);
     }
 
 }
