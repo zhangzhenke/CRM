@@ -74,5 +74,10 @@ public interface ActivityMapper {
      */
     int deleteActivityByIds(String[] ids);
 
+    /**
+     * 根据id查询市场活动的信息
+     */
+    Activity selectActivityById(String id);
+
 
 }

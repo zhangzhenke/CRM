@@ -18,4 +18,6 @@ public interface ActivityService {
     int queryCountOfActivityByCondition(Map<String,Object> map);
     //根据ids批量删除市场活动
     int deleteActivityByIds(String[] ids);
+    //根据id查询市场活动的信息
+    Activity queryActivityById(String id);
 }

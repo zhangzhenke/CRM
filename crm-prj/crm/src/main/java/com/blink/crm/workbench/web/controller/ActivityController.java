@@ -118,4 +118,13 @@ public class ActivityController {
         return returnObject;
     }
 
+    //根据id查询市场活动的信息
+    @RequestMapping("/workbench/activity/queryActivityById.do")
+    public @ResponseBody Object queryActivityById(String id){
+        //调用service层方法，查询市场活动
+        Activity activity = activityService.queryActivityById(id);
+        //根据查询结果，返回响应信息
+        return activity;
+    }
+
 }

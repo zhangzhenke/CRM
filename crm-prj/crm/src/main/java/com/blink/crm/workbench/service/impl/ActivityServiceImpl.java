@@ -39,4 +39,10 @@ public class ActivityServiceImpl implements ActivityService {
         return activityMapper.deleteActivityByIds(ids);
     }
 
+    //根据id查询市场活动的信息
+    @Override
+    public Activity queryActivityById(String id) {
+        return activityMapper.selectActivityById(id);
+    }
+
 }

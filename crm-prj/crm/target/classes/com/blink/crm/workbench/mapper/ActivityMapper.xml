@@ -256,4 +256,12 @@
     </foreach>
   </delete>
 
+  <!--根据id查询市场活动的信息-->
+  <select id="selectActivityById" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from tbl_activity
+    where id=#{id}
+  </select>
+
 </mapper>
