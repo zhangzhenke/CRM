@@ -79,5 +79,8 @@ public interface ActivityMapper {
      */
     Activity selectActivityById(String id);
 
-
+    /**
+     * 保存修改的市场活动
+     */
+    int updateActivity(Activity activity);
 }

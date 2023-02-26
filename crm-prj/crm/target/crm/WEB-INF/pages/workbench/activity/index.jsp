@@ -240,6 +240,68 @@
 				}
 			});
 		});
+
+		//给"更新"按钮添加单击事件，不用dismiss是因为保存失败让窗口不关闭
+		$("#saveEditActivityBtn").click(function () {
+			//收集参数
+			var id=$("#edit-id").val();
+			var owner=$("#edit-marketActivityOwner").val();
+			var name=$.trim($("#edit-marketActivityName").val());
+			var startDate=$("#edit-startTime").val();
+			var endDate=$("#edit-endTime").val();
+			var cost=$.trim($("#edit-cost").val());
+			var description=$.trim($("#edit-description").val());
+			//表单验证(作业)
+			if(owner==""){
+				alert("所有者不能为空");
+				return;
+			}
+			if(name==""){
+				alert("名称不能为空");
+				return;
+			}
+			if(startDate!=""&&endDate!=""){
+				//使用字符串的大小代替日期的大小
+				if(endDate<startDate){
+					alert("结束日期不能比开始日期小");
+					return;
+				}
+			}
+			var regExp=/^(([1-9]\d*)|0)$/;
+			if(!regExp.test(cost)){
+				alert("成本只能为非负整数");
+				return;
+			}
+			//发送请求
+			$.ajax({
+				url:'workbench/activity/saveEditActivity.do',
+				//形参，实体类属性值相同
+				data:{
+					id:id,
+					owner:owner,
+					name:name,
+					startDate:startDate,
+					endDate:endDate,
+					cost:cost,
+					description:description
+				},
+				type:'post',
+				dataType:'json',
+				success:function (data) {
+					if(data.code=="1"){
+						//关闭模态窗口
+						$("#editActivityModal").modal("hide");
+						//刷新市场活动列表,保持页号和每页显示条数都不变
+						queryActivityByConditionForPage($("#demo_pag1").bs_pagination('getOption', 'currentPage'),$("#demo_pag1").bs_pagination('getOption', 'rowsPerPage'));
+					}else{
+						//提示信息
+						alert(data.message);
+						//模态窗口不关闭
+						$("#editActivityModal").modal("show");
+					}
+				}
+			});
+		});
 	});
 
 	//分页查询
@@ -448,7 +510,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" id="saveEditActivityBtn">更新</button>
 				</div>
 			</div>
 		</div>
