@@ -302,6 +302,12 @@
 				}
 			});
 		});
+
+		//给"批量导出"按钮添加单击事件
+		$("#exportActivityAllBtn").click(function () {
+			//发送同步请求,没有参数，不需要验证
+			window.location.href="workbench/activity/exportAllActivitys.do";
+		});
 	});
 
 	//分页查询

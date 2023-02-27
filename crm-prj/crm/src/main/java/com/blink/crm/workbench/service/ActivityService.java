@@ -22,4 +22,6 @@ public interface ActivityService {
     Activity queryActivityById(String id);
     //保存修改的市场活动
     int saveEditActivity(Activity activity);
+    //查询所有的市场活动
+    List<Activity> queryAllActivitys();
 }

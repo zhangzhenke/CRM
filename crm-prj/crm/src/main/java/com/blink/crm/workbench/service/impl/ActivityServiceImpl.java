@@ -51,4 +51,10 @@ public class ActivityServiceImpl implements ActivityService {
         return activityMapper.updateActivity(activity);
     }
 
+    //查询所有的市场活动
+    @Override
+    public List<Activity> queryAllActivitys() {
+        return activityMapper.selectAllActivitys();
+    }
+
 }
