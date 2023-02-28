@@ -57,4 +57,10 @@ public class ActivityServiceImpl implements ActivityService {
         return activityMapper.selectAllActivitys();
     }
 
+    //批量保存创建的市场活动
+    @Override
+    public int saveCreateActivityByList(List<Activity> activityList) {
+        return activityMapper.insertActivityByList(activityList);
+    }
+
 }
