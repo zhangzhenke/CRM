@@ -11,4 +11,8 @@ public interface ActivityRemarkService {
     List<ActivityRemark> queryActivityRemarkForDetailByActivityId(String activityId);
     //保存创建的市场活动备注
     int saveCreateActivityRemark(ActivityRemark remark);
+    //根据id删除市场活动备注
+    int deleteActivityRemarkById(String id);
+    //保存修改的市场活动备注
+    int saveEditActivityRemark(ActivityRemark remark);
 }

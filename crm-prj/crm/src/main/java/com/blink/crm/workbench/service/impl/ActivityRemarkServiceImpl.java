@@ -25,4 +25,16 @@ public class ActivityRemarkServiceImpl implements ActivityRemarkService {
     public int saveCreateActivityRemark(ActivityRemark remark) {
         return activityRemarkMapper.insertActivityRemark(remark);
     }
+
+    //根据id删除市场活动备注
+    @Override
+    public int deleteActivityRemarkById(String id) {
+        return activityRemarkMapper.deleteActivityRemarkById(id);
+    }
+
+    //保存修改的市场活动备注
+    @Override
+    public int saveEditActivityRemark(ActivityRemark remark) {
+        return activityRemarkMapper.updateActivityRemark(remark);
+    }
 }

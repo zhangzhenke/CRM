@@ -112,6 +112,80 @@
 				}
 			});
 		});
+
+		//给所有的"删除"图标添加单击事件，a标签中的name属性
+		$("#remarkDivList").on("click","a[name='deleteA']",function () {
+			//收集参数，先获取jquery对象，自定义属性不是value用attr
+			var id=$(this).attr("remarkId");
+			//发送请求
+			$.ajax({
+				url:'workbench/activity/deleteActivityRemarkById.do',
+				data:{
+					id:id
+				},
+				type:'post',
+				dataType:'json',
+				success:function (data) {
+					if(data.code=="1"){
+						//刷新备注列表，动态刷新
+						$("#div_"+id).remove();
+					}else{
+						//提示信息
+						alert(data.message);
+					}
+				}
+			});
+		});
+
+		//给所有市场活动备注后边的"修改"图标添加单击事件
+		$("#remarkDivList").on("click","a[name='editA']",function () {
+			//获取备注的id和noteContent
+			var id=$(this).attr("remarkId");
+			//间接父子选择器
+			var noteCotent=$("#div_"+id+" h5").text();
+			//把备注的id和noteContent写到修改备注的模态窗口中
+			$("#edit-id").val(id);
+			$("#edit-noteContent").val(noteCotent);
+			//弹出修改市场活动备注的模态窗口
+			$("#editRemarkModal").modal("show");
+		});
+
+		//给“更新”按钮添加单击事件
+		$("#updateRemarkBtn").click(function () {
+			//收集参数
+			var id=$("#edit-id").val();
+			var noteContent=$.trim($("#edit-noteContent").val());
+			//表单验证
+			if(noteContent==""){
+				alert("备注内容不能为空");
+				return;
+			}
+			//发送请求
+			$.ajax({
+				url:'workbench/activity/saveEditActivityRemark.do',
+				data:{
+					id:id,
+					noteContent:noteContent
+				},
+				type:'post',
+				dataType:'json',
+				success:function (data) {
+					if(data.code=="1"){
+						//关闭模态窗口
+						$("#editRemarkModal").modal("hide");
+						//刷新备注列表，空格表示父子选择器
+						$("#div_"+data.retData.id+" h5").text(data.retData.noteContent);
+						$("#div_"+data.retData.id+" small").text(" "+data.retData.editTime+" 由${sessionScope.sessionUser.name}修改");
+					}else{
+						//提示信息
+						alert(data.message);
+						//模态窗口不关闭
+						$("#editRemarkModal").modal("show");
+					}
+				}
+			});
+		});
+
 	});
 	
 </script>
@@ -133,10 +207,11 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" role="form">
+						<input type="hidden" id="edit-id">
                         <div class="form-group">
-                            <label for="noteContent" class="col-sm-2 control-label">内容</label>
+                            <label for="edit-noteContent" class="col-sm-2 control-label">内容</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="noteContent"></textarea>
+                                <textarea class="form-control" rows="3" id="edit-noteContent"></textarea>
                             </div>
                         </div>
                     </form>
