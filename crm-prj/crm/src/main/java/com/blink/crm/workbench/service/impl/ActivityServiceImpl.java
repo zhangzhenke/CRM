@@ -63,4 +63,10 @@ public class ActivityServiceImpl implements ActivityService {
         return activityMapper.insertActivityByList(activityList);
     }
 
+    //根据id查询市场活动的明细信息
+    @Override
+    public Activity queryActivityForDetailById(String id) {
+        return activityMapper.selectActivityForDetailById(id);
+    }
+
 }

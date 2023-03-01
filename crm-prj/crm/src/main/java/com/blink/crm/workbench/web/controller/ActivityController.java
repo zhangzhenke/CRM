@@ -8,6 +8,8 @@ import com.blink.crm.commons.utils.UUIDUtils;
 import com.blink.crm.settings.domain.User;
 import com.blink.crm.settings.service.UserService;
 import com.blink.crm.workbench.domain.Activity;
+import com.blink.crm.workbench.domain.ActivityRemark;
+import com.blink.crm.workbench.service.ActivityRemarkService;
 import com.blink.crm.workbench.service.ActivityService;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -33,6 +35,9 @@ public class ActivityController {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private ActivityRemarkService activityRemarkService;
 
     //显示市场活动页面
     @RequestMapping("/workbench/activity/index.do")
@@ -331,5 +336,16 @@ public class ActivityController {
         return returnObject;
     }
 
-
+    //根据id查询市场活动的明细信息，跳转到详情页面
+    @RequestMapping("/workbench/activity/detailActivity.do")
+    public String detailActivity(String id,HttpServletRequest request){
+        //调用service层方法，查询数据
+        Activity activity = activityService.queryActivityForDetailById(id);
+        List<ActivityRemark> remarkList=activityRemarkService.queryActivityRemarkForDetailByActivityId(id);
+        //把数据保存到request中
+        request.setAttribute("activity",activity);
+        request.setAttribute("remarkList",remarkList);
+        //请求转发
+        return "workbench/activity/detail";
+    }
 }
