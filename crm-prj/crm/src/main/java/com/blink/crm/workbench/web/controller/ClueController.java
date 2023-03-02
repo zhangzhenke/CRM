@@ -1,13 +1,22 @@
 package com.blink.crm.workbench.web.controller;
 
+import com.blink.crm.commons.constants.Constants;
+import com.blink.crm.commons.domain.ReturnObject;
+import com.blink.crm.commons.utils.DateUtils;
+import com.blink.crm.commons.utils.UUIDUtils;
 import com.blink.crm.settings.domain.DicValue;
 import com.blink.crm.settings.domain.User;
 import com.blink.crm.settings.service.DicValueService;
 import com.blink.crm.settings.service.UserService;
+import com.blink.crm.workbench.domain.Clue;
+import com.blink.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Controller
@@ -18,6 +27,9 @@ public class ClueController {
 
     @Autowired
     private DicValueService dicValueService;
+
+    @Autowired
+    private ClueService clueService;
 
 
     //跳转线索主页面
@@ -38,6 +50,37 @@ public class ClueController {
         request.setAttribute("sourceList",sourceList);
         //请求转发
         return "workbench/clue/index";
+    }
+
+    //保存创建的线索
+    @RequestMapping("/workbench/clue/saveCreateClue.do")
+    public @ResponseBody
+    Object saveCreateClue(Clue clue, HttpSession session){
+        User user=(User)session.getAttribute(Constants.SESSION_USER);
+
+        //封装参数
+        clue.setId(UUIDUtils.getUUID());
+        clue.setCreateTime(DateUtils.formatDateTime(new Date()));
+        clue.setCreateBy(user.getId());
+
+        ReturnObject returnObject = new ReturnObject();
+        try {
+            //调用service层方法，保存创建的线索
+            int ret = clueService.saveCreateClue(clue);
+
+            if(ret>0){
+                returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage("系统忙，请稍后重试....");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage("系统忙，请稍后重试....");
+        }
+
+        return returnObject;
     }
 
 

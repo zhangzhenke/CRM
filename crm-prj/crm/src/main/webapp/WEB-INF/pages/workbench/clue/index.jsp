@@ -20,7 +20,73 @@
 
 	$(function(){
 
+		//给"创建"按钮添加单击事件
+		$("#createClueBtn").click(function () {
+			//初始化工作，重置一下
+			$("#createClueForm")[0].reset();
+			//弹出模态窗口
+			$("#createClueModal").modal("show");
+		});
 
+		//给"保存"按钮添加单击事件
+		$("#saveCreateClueBtn").click(function () {
+			//收集参数
+			var fullname=$.trim($("#create-fullname").val());
+			var appellation=$("#create-appellation").val();
+			var owner=$("#create-owner").val();
+			var company=$.trim($("#create-company").val());
+			var job=$.trim($("#create-job").val());
+			var email=$.trim($("#create-email").val());
+			var phone=$.trim($("#create-phone").val());
+			var website=$.trim($("#create-website").val());
+			var mphone=$.trim($("#create-mphone").val());
+			var state=$("#create-state").val();
+			var source=$("#create-source").val();
+			var description=$.trim($("#create-description").val());
+			var contactSummary=$.trim($("#create-contactSummary").val());
+			var nextContactTime=$.trim($("#create-nextContactTime").val());
+			var address=$.trim($("#create-address").val());
+			//表单验证(作业)
+			//带*非空
+			//正则表达式验证
+
+			//发送请求
+			$.ajax({
+				url:'workbench/clue/saveCreateClue.do',
+				data:{
+					fullname:fullname,
+					appellation:appellation,
+					owner:owner,
+					company:company,
+					job:job,
+					email:email,
+					phone:phone,
+					website:website,
+					mphone:mphone,
+					state:state,
+					source:source,
+					description:description,
+					contactSummary:contactSummary,
+					nextContactTime:nextContactTime,
+					address:address
+				},
+				type:'post',
+				dataType:'json',
+				success:function (data) {
+					if(data.code=="1"){
+						//关闭模态窗口
+						$("#createClueModal").modal("hide");
+						//刷新线索列表，显示第一页数据，保持每页显示条数不变(作业)
+
+					}else{
+						//提示信息
+						alert(data.message);
+						//模态窗口不关闭
+						$("#createClueModal").modal("show");
+					}
+				}
+			});
+		});
 
 	});
 
@@ -28,145 +94,145 @@
 </head>
 <body>
 
-	<!-- 创建线索的模态窗口 -->
-	<div class="modal fade" id="createClueModal" role="dialog">
-		<div class="modal-dialog" role="document" style="width: 90%;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">×</span>
-					</button>
-					<h4 class="modal-title" id="myModalLabel">创建线索</h4>
-				</div>
-				<div class="modal-body">
-					<form class="form-horizontal" role="form">
+<!-- 创建线索的模态窗口 -->
+<div class="modal fade" id="createClueModal" role="dialog">
+	<div class="modal-dialog" role="document" style="width: 90%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">创建线索</h4>
+			</div>
+			<div class="modal-body">
+				<form id="createClueForm" class="form-horizontal" role="form">
 
-						<div class="form-group">
-							<label for="create-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
-							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-clueOwner">
-									<c:forEach items="${userList}" var="u">
-										<option value="${u.id}">${u.name}</option>
-									</c:forEach>
-								</select>
-							</div>
-							<label for="create-company" class="col-sm-2 control-label">公司<span style="font-size: 15px; color: red;">*</span></label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-company">
-							</div>
+					<div class="form-group">
+						<label for="create-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+						<div class="col-sm-10" style="width: 300px;">
+							<select class="form-control" id="create-owner">
+								<c:forEach items="${userList}" var="u">
+									<option value="${u.id}">${u.name}</option>
+								</c:forEach>
+							</select>
 						</div>
-
-						<div class="form-group">
-							<label for="create-call" class="col-sm-2 control-label">称呼</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-call">
-								  <option></option>
-									<c:forEach items="${appellationList}" var="app">
-										<option value="${app.id}">${app.value}</option>
-									</c:forEach>
-								</select>
-							</div>
-							<label for="create-surname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-surname">
-							</div>
+						<label for="create-company" class="col-sm-2 control-label">公司<span style="font-size: 15px; color: red;">*</span></label>
+						<div class="col-sm-10" style="width: 300px;">
+							<input type="text" class="form-control" id="create-company">
 						</div>
+					</div>
 
-						<div class="form-group">
-							<label for="create-job" class="col-sm-2 control-label">职位</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-job">
-							</div>
-							<label for="create-email" class="col-sm-2 control-label">邮箱</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-email">
-							</div>
+					<div class="form-group">
+						<label for="create-appellation" class="col-sm-2 control-label">称呼</label>
+						<div class="col-sm-10" style="width: 300px;">
+							<select class="form-control" id="create-appellation">
+								<option></option>
+								<c:forEach items="${appellationList}" var="app">
+									<option value="${app.id}">${app.value}</option>
+								</c:forEach>
+							</select>
 						</div>
-
-						<div class="form-group">
-							<label for="create-phone" class="col-sm-2 control-label">公司座机</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-phone">
-							</div>
-							<label for="create-website" class="col-sm-2 control-label">公司网站</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-website">
-							</div>
+						<label for="create-fullname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
+						<div class="col-sm-10" style="width: 300px;">
+							<input type="text" class="form-control" id="create-fullname">
 						</div>
+					</div>
 
-						<div class="form-group">
-							<label for="create-mphone" class="col-sm-2 control-label">手机</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-mphone">
-							</div>
-							<label for="create-status" class="col-sm-2 control-label">线索状态</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-status">
-								  <option></option>
-									<c:forEach items="${clueStateList}" var="cs">
-										<option value="${cs.id}">${cs.value}</option>
-									</c:forEach>
-								</select>
-							</div>
+					<div class="form-group">
+						<label for="create-job" class="col-sm-2 control-label">职位</label>
+						<div class="col-sm-10" style="width: 300px;">
+							<input type="text" class="form-control" id="create-job">
 						</div>
-
-						<div class="form-group">
-							<label for="create-source" class="col-sm-2 control-label">线索来源</label>
-							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-source">
-								  <option></option>
-									<c:forEach items="${sourceList}" var="sl">
-										<option value="${sl.id}">${sl.value}</option>
-									</c:forEach>
-								</select>
-							</div>
+						<label for="create-email" class="col-sm-2 control-label">邮箱</label>
+						<div class="col-sm-10" style="width: 300px;">
+							<input type="text" class="form-control" id="create-email">
 						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="create-phone" class="col-sm-2 control-label">公司座机</label>
+						<div class="col-sm-10" style="width: 300px;">
+							<input type="text" class="form-control" id="create-phone">
+						</div>
+						<label for="create-website" class="col-sm-2 control-label">公司网站</label>
+						<div class="col-sm-10" style="width: 300px;">
+							<input type="text" class="form-control" id="create-website">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="create-mphone" class="col-sm-2 control-label">手机</label>
+						<div class="col-sm-10" style="width: 300px;">
+							<input type="text" class="form-control" id="create-mphone">
+						</div>
+						<label for="create-state" class="col-sm-2 control-label">线索状态</label>
+						<div class="col-sm-10" style="width: 300px;">
+							<select class="form-control" id="create-state">
+								<option></option>
+								<c:forEach items="${clueStateList}" var="cs">
+									<option value="${cs.id}">${cs.value}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="create-source" class="col-sm-2 control-label">线索来源</label>
+						<div class="col-sm-10" style="width: 300px;">
+							<select class="form-control" id="create-source">
+								<option></option>
+								<c:forEach items="${sourceList}" var="sl">
+									<option value="${sl.id}">${sl.value}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
 
 
+					<div class="form-group">
+						<label for="create-description" class="col-sm-2 control-label">线索描述</label>
+						<div class="col-sm-10" style="width: 81%;">
+							<textarea class="form-control" rows="3" id="create-description"></textarea>
+						</div>
+					</div>
+
+					<div style="height: 1px; width: 103%; background-color: #D5D5D5; left: -13px; position: relative;"></div>
+
+					<div style="position: relative;top: 15px;">
 						<div class="form-group">
-							<label for="create-describe" class="col-sm-2 control-label">线索描述</label>
+							<label for="create-contactSummary" class="col-sm-2 control-label">联系纪要</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-contactSummary"></textarea>
 							</div>
 						</div>
-
-						<div style="height: 1px; width: 103%; background-color: #D5D5D5; left: -13px; position: relative;"></div>
-
-						<div style="position: relative;top: 15px;">
-							<div class="form-group">
-								<label for="create-contactSummary" class="col-sm-2 control-label">联系纪要</label>
-								<div class="col-sm-10" style="width: 81%;">
-									<textarea class="form-control" rows="3" id="create-contactSummary"></textarea>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
-								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control" id="create-nextContactTime">
-								</div>
+						<div class="form-group">
+							<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
+							<div class="col-sm-10" style="width: 300px;">
+								<input type="text" class="form-control" id="create-nextContactTime">
 							</div>
 						</div>
+					</div>
 
-						<div style="height: 1px; width: 103%; background-color: #D5D5D5; left: -13px; position: relative; top : 10px;"></div>
+					<div style="height: 1px; width: 103%; background-color: #D5D5D5; left: -13px; position: relative; top : 10px;"></div>
 
-						<div style="position: relative;top: 20px;">
-							<div class="form-group">
-                                <label for="create-address" class="col-sm-2 control-label">详细地址</label>
-                                <div class="col-sm-10" style="width: 81%;">
-                                    <textarea class="form-control" rows="1" id="create-address"></textarea>
-                                </div>
+					<div style="position: relative;top: 20px;">
+						<div class="form-group">
+							<label for="create-address" class="col-sm-2 control-label">详细地址</label>
+							<div class="col-sm-10" style="width: 81%;">
+								<textarea class="form-control" rows="1" id="create-address"></textarea>
 							</div>
 						</div>
-					</form>
+					</div>
+				</form>
 
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
-				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-primary" id="saveCreateClueBtn">保存</button>
 			</div>
 		</div>
 	</div>
+</div>
 
 	<!-- 修改线索的模态窗口 -->
 	<div class="modal fade" id="editClueModal" role="dialog">
@@ -394,9 +460,9 @@
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 40px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createClueModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+					<button type="button" class="btn btn-primary" id="createClueBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  	<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 
 
