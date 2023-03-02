@@ -69,4 +69,11 @@ public class ActivityServiceImpl implements ActivityService {
         return activityMapper.selectActivityForDetailById(id);
     }
 
+    //根据clueId查询该线索相关联的市场活动的明细信息
+    @Override
+    public List<Activity> queryActivityForDetailByClueId(String clueId) {
+        return activityMapper.selectActivityForDetailByClueId(clueId);
+    }
+
+
 }

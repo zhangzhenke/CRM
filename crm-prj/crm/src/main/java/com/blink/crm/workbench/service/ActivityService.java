@@ -28,4 +28,6 @@ public interface ActivityService {
     int saveCreateActivityByList(List<Activity> activityList);
     //根据id查询市场活动的明细信息
     Activity queryActivityForDetailById(String id);
+    //根据clueId查询该线索相关联的市场活动的明细信息
+    List<Activity> queryActivityForDetailByClueId(String clueId);
 }

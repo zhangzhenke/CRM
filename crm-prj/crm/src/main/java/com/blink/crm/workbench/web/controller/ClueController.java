@@ -8,7 +8,11 @@ import com.blink.crm.settings.domain.DicValue;
 import com.blink.crm.settings.domain.User;
 import com.blink.crm.settings.service.DicValueService;
 import com.blink.crm.settings.service.UserService;
+import com.blink.crm.workbench.domain.Activity;
 import com.blink.crm.workbench.domain.Clue;
+import com.blink.crm.workbench.domain.ClueRemark;
+import com.blink.crm.workbench.service.ActivityService;
+import com.blink.crm.workbench.service.ClueRemarkService;
 import com.blink.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +34,12 @@ public class ClueController {
 
     @Autowired
     private ClueService clueService;
+
+    @Autowired
+    private ClueRemarkService clueRemarkService;
+
+    @Autowired
+    private ActivityService activityService;
 
 
     //跳转线索主页面
@@ -81,6 +91,21 @@ public class ClueController {
         }
 
         return returnObject;
+    }
+
+    //跳转线索详细页面
+    @RequestMapping("/workbench/clue/detailClue.do")
+    public String detailClue(String id,HttpServletRequest request){
+        //调用service层方法，查询数据
+        Clue clue = clueService.queryClueForDetailById(id);
+        List<ClueRemark> remarkList = clueRemarkService.queryClueRemarkForDetailByClueId(id);
+        List<Activity> activityList = activityService.queryActivityForDetailByClueId(id);
+        //把数据保存到request中
+        request.setAttribute("clue",clue);
+        request.setAttribute("remarkList",remarkList);
+        request.setAttribute("activityList",activityList);
+        //请求转发
+        return "workbench/clue/detail";
     }
 
 

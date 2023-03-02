@@ -17,4 +17,10 @@ public class ClueServiceImpl implements ClueService {
     public int saveCreateClue(Clue clue) {
         return clueMapper.insertClue(clue);
     }
+
+    //根据id查询线索的明细信息
+    @Override
+    public Clue queryClueForDetailById(String id) {
+        return clueMapper.selectClueForDetailById(id);
+    }
 }
