@@ -75,5 +75,17 @@ public class ActivityServiceImpl implements ActivityService {
         return activityMapper.selectActivityForDetailByClueId(clueId);
     }
 
+    //根据name模糊查询市场活动，并且把已经跟clueId关联过的市场活动排除
+    @Override
+    public List<Activity> queryActivityForDetailByNameClueId(Map<String, Object> map) {
+        return activityMapper.selectActivityForDetailByNameClueId(map);
+    }
+
+    //根据ids查询市场活动的明细信息
+    @Override
+    public List<Activity> queryActivityForDetailByIds(String[] ids) {
+        return activityMapper.selectActivityForDetailByIds(ids);
+    }
+
 
 }

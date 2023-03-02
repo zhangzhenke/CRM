@@ -51,6 +51,100 @@
 		$(".myHref").mouseout(function(){
 			$(this).children("span").css("color","#E6E6E6");
 		});
+
+		//给"关联市场活动"按钮添加单击事件
+		$("#bundActivityBtn").click(function () {
+			//初始化工作
+			//清空搜索框
+			$("#searchActivityTxt").val("");
+			//清空搜索的市场活动列表
+			$("#tBody").html("");
+
+			//弹出"线索关联市场活动"的模态窗口
+			$("#bundModal").modal("show");
+		});
+
+		//给市场活动搜索框添加键盘弹起事件
+		$("#searchActivityTxt").keyup(function () {
+			//收集参数
+			var activityName=this.value;
+			var clueId='${clue.id}';
+			//发送请求
+			$.ajax({
+				url:'workbench/clue/queryActivityForDetailByNameClueId.do',
+				data:{
+					activityName:activityName,
+					clueId:clueId
+				},
+				type:'post',
+				dataType:'json',
+				success:function (data) {
+					//遍历data，显示搜索到的市场活动列表
+					var htmlStr="";
+					$.each(data,function (index,obj) {
+						htmlStr+="<tr>";
+						htmlStr+="<td><input type=\"checkbox\" value=\""+obj.id+"\"/></td>";
+						htmlStr+="<td>"+obj.name+"</td>";
+						htmlStr+="<td>"+obj.startDate+"</td>";
+						htmlStr+="<td>"+obj.endDate+"</td>";
+						htmlStr+="<td>"+obj.owner+"</td>";
+						htmlStr+="</tr>";
+					});
+					$("#tBody").html(htmlStr);
+				}
+			});
+		});
+
+		//给"关联"按钮添加单击事件
+		$("#saveBundActivityBtn").click(function () {
+			//收集参数
+			//获取列表中所有被选中的checkbox
+			var chckedIds=$("#tBody input[type='checkbox']:checked");
+			//表单验证
+			if(chckedIds.size()==0){
+				alert("请选择要关联的市场活动");
+				return;
+			}
+			var ids="";
+			$.each(chckedIds,function () {//activityId=xxxx&activityId=xxxx&....&activityId=xxxx&
+				ids+="activityId="+this.value+"&";
+			});
+			//EL表达式放在引号里
+			ids+="clueId=${clue.id}";//activityId=xxxx&activityId=xxxx&....&activityId=xxxx&clueId=xxxxx
+
+			//发送请求
+			$.ajax({
+				url:'workbench/clue/saveBund.do',
+				data:ids,
+				type:'post',
+				dataType:'json',
+				success:function (data) {
+					if(data.code=="1"){
+						//关闭模态窗口
+						$("#bundModal").modal("hide");
+						//刷新已经关联过的市场活动列表
+						var htmlStr="";
+						$.each(data.retData,function (index,obj) {
+							htmlStr+="<tr id=\"tr_"+obj.id+"\">";
+							htmlStr+="<td>"+obj.name+"</td>";
+							htmlStr+="<td>"+obj.startDate+"</td>";
+							htmlStr+="<td>"+obj.endDate+"</td>";
+							htmlStr+="<td>"+obj.owner+"</td>";
+							htmlStr+="<td><a href=\"javascript:void(0);\" activityId=\""+obj.id+"\"  style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>解除关联</a></td>";
+							htmlStr+="</tr>";
+						});
+						//追加显示
+						$("#relationedTBody").append(htmlStr);
+					}else{
+						//提示信息
+						alert(data.message);
+						//模态窗口不关闭
+						$("#bundModal").modal("show");
+					}
+				}
+			});
+		});
+
 	});
 	
 </script>
@@ -58,61 +152,61 @@
 </head>
 <body>
 
-	<!-- 关联市场活动的模态窗口 -->
-	<div class="modal fade" id="bundModal" role="dialog">
-		<div class="modal-dialog" role="document" style="width: 80%;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">×</span>
-					</button>
-					<h4 class="modal-title">关联市场活动</h4>
+<!-- 关联市场活动的模态窗口 -->
+<div class="modal fade" id="bundModal" role="dialog">
+	<div class="modal-dialog" role="document" style="width: 80%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h4 class="modal-title">关联市场活动</h4>
+			</div>
+			<div class="modal-body">
+				<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
+					<form class="form-inline" role="form">
+						<div class="form-group has-feedback">
+							<input type="text" id="searchActivityTxt" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+							<span class="glyphicon glyphicon-search form-control-feedback"></span>
+						</div>
+					</form>
 				</div>
-				<div class="modal-body">
-					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
-						<form class="form-inline" role="form">
-						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
-						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
-						  </div>
-						</form>
-					</div>
-					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
-						<thead>
-							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
-								<td>名称</td>
-								<td>开始日期</td>
-								<td>结束日期</td>
-								<td>所有者</td>
-								<td></td>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
-				</div>
+				<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
+					<thead>
+					<tr style="color: #B3B3B3;">
+						<td><input type="checkbox"/></td>
+						<td>名称</td>
+						<td>开始日期</td>
+						<td>结束日期</td>
+						<td>所有者</td>
+						<td></td>
+					</tr>
+					</thead>
+					<tbody id="tBody">
+					<%--<tr>
+                        <td><input type="checkbox"/></td>
+                        <td>发传单</td>
+                        <td>2020-10-10</td>
+                        <td>2020-10-20</td>
+                        <td>zhangsan</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"/></td>
+                        <td>发传单</td>
+                        <td>2020-10-10</td>
+                        <td>2020-10-20</td>
+                        <td>zhangsan</td>
+                    </tr>--%>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" id="saveBundActivityBtn">关联</button>
 			</div>
 		</div>
 	</div>
+</div>
 
 
 	<!-- 返回按钮 -->
@@ -298,7 +392,7 @@
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="relationedTBody">
 						<c:forEach items="${activityList}" var="act">
 							<tr id="tr_${act.id}">
 								<td>${act.name}</td>
@@ -327,7 +421,7 @@
 			</div>
 			
 			<div>
-				<a href="javascript:void(0);" data-toggle="modal" data-target="#bundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
+				<a href="javascript:void(0);" id="bundActivityBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
 			</div>
 		</div>
 	</div>
