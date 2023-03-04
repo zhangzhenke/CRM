@@ -17,7 +17,7 @@
         <property name="url" value="jdbc:mysql://localhost:3306/crm?useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT%2B8"/>
     </bean>
 
-    <!-- 配置SqlSessionFactory 数据库实例-->
+    <!-- 配置SqlSessionFactory 数据库实例,可以进行增删查改以及事务操作-->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <!-- 必须注入属性dataSource -->
         <property name="dataSource" ref="dataSource"/>
@@ -25,7 +25,7 @@
         <property name="configLocation" value="classpath:mybatis-config.xml"/>
     </bean>
 
-    <!-- mapper注解扫描器配置,扫描@MapperScan注解,自动生成代码对象 -->
+    <!-- mapper注解扫描器配置,扫描@MapperScan注解,自动生成代码对象,将这些接口注入到Spring上下文中,要每个接口都要变成实现类-->
     <bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.blink.crm.settings.mapper,
                                             com.blink.crm.workbench.mapper"/>

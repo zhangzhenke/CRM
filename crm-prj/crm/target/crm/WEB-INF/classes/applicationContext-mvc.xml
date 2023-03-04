@@ -22,19 +22,20 @@ http://www.springframework.org/schema/util
 http://www.springframework.org/schema/util/spring-util.xsd">
     <!-- dispatcherServlet截获所有URL请求 -->
     <mvc:default-servlet-handler />
-    <!-- spring mvc 扫描包下的controller -->
+    <!-- spring mvc 扫描包下的controller 使用@Contorller创建控制器对象，把对象放入到springmvc容器中，把创建的对象作为控制器使用
+    这个控制器对象能接收用户的请求，显示处理结果，就当做是一个servlet使用。-->
     <context:component-scan base-package="com.blink.crm.web.controller"/>
     <context:component-scan base-package="com.blink.crm.settings.web.controller"/>
     <context:component-scan base-package="com.blink.crm.workbench.web.controller"/>
     <!-- 配置注解驱动 -->
     <mvc:annotation-driven/>
-    <!-- 配置视图解析器 -->
+    <!-- 配置视图解析器 简化地址路径-->
     <bean id="viewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-    <!-- 配置拦截器 -->
+    <!-- 配置拦截器 拦截地址-->
     <mvc:interceptors>
         <mvc:interceptor>
             <!--配置拦截的请求-->

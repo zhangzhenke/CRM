@@ -33,6 +33,7 @@ public class UserController {
         return "settings/qx/user/login";
     }
 
+    //接收参数验证登录，返回json串
     @RequestMapping("/settings/qx/user/login.do")
     public @ResponseBody Object login(String loginAct, String loginPwd, String isRemPwd, HttpServletRequest request, HttpServletResponse response, HttpSession session){
         //封装参数

@@ -44,7 +44,7 @@ public class ActivityController {
     public String index(HttpServletRequest request){
         //调用service层方法，查询所有的用户
         List<User> userList=userService.queryAllUsers();
-        //把数据保存到request中
+        //把数据保存到request中，范围小
         request.setAttribute("userList",userList);
         //请求转发到市场活动的主页面（我要携带数据）
         return "workbench/activity/index";
